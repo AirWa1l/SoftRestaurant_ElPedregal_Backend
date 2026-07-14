@@ -111,7 +111,7 @@ describe("API funcional", () => {
 
     const missing = await request(app).get("/uploads/products/archivo-inexistente.jpg");
     expect(missing.status).toBe(200);
-    expect(missing.headers["content-type"]).toMatch(/image\/svg\+xml|svg/);
+    expect(missing.headers["content-type"]).toMatch(/image\/png/);
   });
 
   it("exige admin para crear productos", async () => {

@@ -23,7 +23,7 @@ const corsOrigins = env.CORS_ORIGIN.split(",")
   .filter(Boolean);
 
 const uploadsRoot = path.join(process.cwd(), "uploads");
-const defaultProductImage = path.join(uploadsRoot, "products", "default-product.svg");
+const defaultProductImage = path.join(uploadsRoot, "products", "default-product.png");
 
 //app.use(helmet());
 app.use(helmet({
@@ -52,7 +52,7 @@ app.use(
     if (!fs.existsSync(defaultProductImage)) {
       return next();
     }
-    return res.type("image/svg+xml").sendFile(defaultProductImage);
+    return res.type("image/png").sendFile(defaultProductImage);
   }
 );
 
