@@ -1,17 +1,43 @@
 import js from "@eslint/js";
-import tseslint from "@typescript-eslint/eslint-plugin";
-import parser from "@typescript-eslint/parser";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default [
   js.configs.recommended,
+
+  ...tseslint.configs.recommended,
+
   {
     files: ["**/*.ts"],
     languageOptions: {
-      parser,
+      parser: tseslint.parser,
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+      },
     },
-    plugins: {
-      "@typescript-eslint": tseslint,
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
     },
-    rules: {},
+  },
+
+  {
+    files: [
+      "tests/**/*.ts",
+      "vitest.config.ts"
+    ],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
   },
 ];
