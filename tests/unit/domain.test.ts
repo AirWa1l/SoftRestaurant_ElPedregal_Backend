@@ -35,11 +35,12 @@ describe("pricing.applyDiscount (funcional)", () => {
     const percent = {
       type: "percentage",
       value: 10,
-    } as PromotionDocument;
+    } as unknown as PromotionDocument;
+
     const fixed = {
       type: "fixed",
       value: 1500,
-    } as PromotionDocument;
+    } as unknown as PromotionDocument;
 
     expect(applyDiscount(10000, percent)).toBe(9000);
     expect(applyDiscount(10000, fixed)).toBe(8500);
@@ -49,7 +50,8 @@ describe("pricing.applyDiscount (funcional)", () => {
     const fixed = {
       type: "fixed",
       value: 50_000,
-    } as PromotionDocument;
+    } as unknown as PromotionDocument;
+
     expect(applyDiscount(1000, fixed)).toBe(0);
   });
 });
