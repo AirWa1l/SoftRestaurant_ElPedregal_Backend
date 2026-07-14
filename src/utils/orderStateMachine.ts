@@ -33,6 +33,8 @@ export const ORDER_TRANSITIONS: Record<OrderStatus, OrderTransition[]> = {
 
 /** Devuelve los estados destino válidos desde un estado dado. */
 export function allowedTargets(from: OrderStatus): OrderStatus[] {
+  console.log("Estado:", from);
+  console.log("Transiciones:", ORDER_TRANSITIONS[from]);
   return ORDER_TRANSITIONS[from].map((t) => t.to);
 }
 
@@ -41,5 +43,5 @@ export function findTransition(
   from: OrderStatus,
   to: OrderStatus
 ): OrderTransition | null {
-  return ORDER_TRANSITIONS[from].find((t) => t.to === to) ?? null;
+  return ORDER_TRANSITIONS[from]?.find((t) => t.to === to) ?? null;
 }
