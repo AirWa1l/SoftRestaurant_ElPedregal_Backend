@@ -46,5 +46,5 @@ export function findTransition(
   from: OrderStatus,
   to: OrderStatus
 ): OrderTransition | null {
-  return ORDER_TRANSITIONS[from].find((t) => t.to === to) ?? null;
+  return ORDER_TRANSITIONS[from]?.find((t) => t.to === to) ?? null;
 }
