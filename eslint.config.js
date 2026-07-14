@@ -5,6 +5,16 @@ import tseslint from "typescript-eslint";
 export default [
   js.configs.recommended,
 
+  {
+  files: ["scripts/**/*.js"],
+  languageOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
+    globals: {
+      ...globals.node,
+    },
+  },
+},
   ...tseslint.configs.recommended,
 
   {
