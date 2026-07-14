@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 
 import cookieParser from "cookie-parser";
@@ -21,6 +22,9 @@ const corsOrigins = env.CORS_ORIGIN.split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
 
+const uploadsRoot = path.join(process.cwd(), "uploads");
+const defaultProductImage = path.join(uploadsRoot, "products", "default-product.svg");
+
 //app.use(helmet());
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
@@ -37,7 +41,20 @@ app.use(cookieParser());
 
 app.get("/health", (_req, res) => res.status(200).json({ status: "ok" }));
 
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+app.use(
+  "/uploads",
+  express.static(uploadsRoot),
+  // Si el archivo no existe (p. ej. clone sin binarios), servir placeholder del menú.
+  (req, res, next) => {
+    if (!req.path.startsWith("/products/")) {
+      return next();
+    }
+    if (!fs.existsSync(defaultProductImage)) {
+      return next();
+    }
+    return res.type("image/svg+xml").sendFile(defaultProductImage);
+  }
+);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);

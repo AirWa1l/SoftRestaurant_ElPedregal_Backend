@@ -20,6 +20,7 @@ pnpm-debug.log*
 # Uploaded files
 uploads/*
 !uploads/products/.gitkeep
+!uploads/products/default-product.svg
 
 # Coverage
 coverage/

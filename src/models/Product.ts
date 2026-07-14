@@ -8,7 +8,6 @@ export interface ProductDocument {
   category: Types.ObjectId;
   image?: string;
   isAvailable: boolean;
-  stock: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,7 +25,6 @@ const productSchema = new Schema<ProductDocument>(
     },
     image: { type: String, default: undefined },
     isAvailable: { type: Boolean, default: true, required: true },
-    stock: { type: Number, default: 0, min: 0, required: true },
   },
   {
     timestamps: true,
@@ -35,6 +33,8 @@ const productSchema = new Schema<ProductDocument>(
         if (ret["price"] != null) {
           ret["price"] = parseFloat(String(ret["price"]));
         }
+        // Inventario eliminado: no exponer stock residual de documentos viejos.
+        delete ret["stock"];
         return ret;
       },
     },

@@ -31,7 +31,6 @@ const productSchema = z.object({
         })
     ),
   category: z.string().min(1),
-  stock: z.coerce.number().int().min(0).default(0),
   imageUrl: z.string().trim().url().optional(),
 });
 
@@ -46,7 +45,6 @@ const productUpdateSchema = z.object({
   description: z.string().min(1).max(2000).trim().optional(),
   isAvailable: booleanFromString.optional(),
   category: z.string().min(1).optional(),
-  stock: z.coerce.number().int().min(0).optional(),
   imageUrl: z.string().trim().url().optional(),
 });
 
@@ -55,7 +53,7 @@ const productUpdateSchema = z.object({
 router.get(
   "/",
   asyncHandler(async (req, res) => {
-    const products = await Product.find().populate("category").lean();
+    const products = await Product.find().select("-stock").populate("category").lean();
     return res.status(200).json({
       message: "products_retrieved",
       products: products,
@@ -127,7 +125,6 @@ router.post(
       description,
       price: mongoose.Types.Decimal128.fromString(price.toFixed(2)),
       category: categoryId,
-      stock: parsed.data.stock,
     };
     if (req.file) {
       data["image"] = `/uploads/products/${req.file.filename}`;
@@ -174,7 +171,7 @@ router.patch(
       });
     }
 
-    const { name, description, isAvailable, category: categoryId, stock, imageUrl } = parsed.data;
+    const { name, description, isAvailable, category: categoryId, imageUrl } = parsed.data;
 
     // Validate category if provided
     if (categoryId) {
@@ -221,11 +218,6 @@ router.patch(
     if (categoryId && categoryId !== product.category.toString()) {
       changedFields.category = { from: product.category.toString(), to: categoryId };
       product.category = new mongoose.Types.ObjectId(categoryId);
-    }
-
-    if (stock !== undefined && stock !== product.stock) {
-      changedFields.stock = { from: product.stock, to: stock };
-      product.stock = stock;
     }
 
     if (req.file) {

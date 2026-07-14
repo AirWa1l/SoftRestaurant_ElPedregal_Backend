@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import fs from "fs";
 import path from "path";
 
 import multer from "multer";
@@ -6,8 +7,12 @@ import multer from "multer";
 const ALLOWED_MIMES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
+export const PRODUCTS_UPLOAD_DIR = path.join(process.cwd(), "uploads", "products");
+
+fs.mkdirSync(PRODUCTS_UPLOAD_DIR, { recursive: true });
+
 const storage = multer.diskStorage({
-  destination: path.join(process.cwd(), "uploads", "products"),
+  destination: PRODUCTS_UPLOAD_DIR,
   filename: (_req, file, cb) => {
     const unique = crypto.randomBytes(16).toString("hex");
     const ext = path.extname(file.originalname).toLowerCase();
